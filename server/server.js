@@ -74,7 +74,16 @@ var server = app.listen(3000, function() {
 var io = socketio.listen(server, { origins : '*:*' });
 
 io.sockets.on('connection', function(socket) {
-    log('connection');
+    log('new socket client: ', socket.id);
+    
+    socket.on('disconnect', function() {
+        log('socket client disconnected: ', socket.id);
+    });
+    
+    socket.on('mouse', function(data) {
+        log('mouse coords: ' + data.x + " " + data.y);
+        socket.broadcast.emit('mouse', data);
+    })
 });
 
 // use middlewares
